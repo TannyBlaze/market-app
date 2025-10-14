@@ -1,0 +1,39 @@
+<nav class="bg-gray-900 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold tracking-tight flex items-center gap-2">
+            <i class="fa-solid fa-store text-blue-400"></i> MyShop
+        </h1>
+        <div class="flex space-x-6 text-sm font-medium">
+            <a routerLink="/" routerLinkActive="text-blue-400 font-semibold"
+                class="flex items-center gap-2 hover:text-blue-400 transition duration-200">
+                <i class="fa-solid fa-house"></i> Home </a>
+            <a routerLink="/cart" routerLinkActive="text-blue-400 font-semibold"
+                class="flex items-center gap-2 hover:text-blue-400 transition duration-200">
+                <i class="fa-solid fa-cart-shopping"></i> Cart </a>
+            <a routerLink="/orders" routerLinkActive="text-blue-400 font-semibold"
+                class="flex items-center gap-2 hover:text-blue-400 transition duration-200">
+                <i class="fa-solid fa-box"></i> Orders </a>
+            <ng-container *ngIf="(user$ | async) as user">
+                <a *ngIf="user.role === 'admin'" routerLink="/add-product"
+                    routerLinkActive="text-blue-400 font-semibold"
+                    class="flex items-center gap-2 hover:text-blue-400 transition duration-200">
+                    <i class="fa-solid fa-plus"></i> Add Product </a>
+                <span class="flex items-center gap-2 text-gray-300">
+                    <i class="fa-solid fa-user text-blue-400"></i> {{ user.name }} </span>
+                <a (click)="logout()" class="cursor-pointer hover:text-red-400 transition duration-200">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout </a>
+            </ng-container>
+            <ng-template #guest>
+                <a routerLink="/login" routerLinkActive="text-blue-400 font-semibold"
+                    class="hover:text-blue-400 transition duration-200">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login </a>
+                <a routerLink="/signup" routerLinkActive="text-blue-400 font-semibold"
+                    class="hover:text-blue-400 transition duration-200">
+                    <i class="fa-solid fa-user-plus"></i> Signup </a>
+            </ng-template>
+        </div>
+    </div>
+</nav>
+<main class="p-6 bg-gray-100 min-h-screen">
+    <router-outlet></router-outlet>
+</main>

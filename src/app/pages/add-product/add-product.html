@@ -1,0 +1,68 @@
+<div class="min-h-screen bg-gray-100 p-6">
+    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center flex items-center justify-center gap-2">
+            <i class="fa-solid fa-box"></i> {{ editingProductId ? "Edit Product" : "Add New Product" }}
+        </h2>
+        <!-- FORM SECTION -->
+        <div class="grid gap-4 mb-6">
+            <div class="relative">
+                <i class="fa-solid fa-tag absolute left-3 top-3 text-gray-400"></i>
+                <input placeholder="Name" [(ngModel)]="name"
+                    class="w-full border border-gray-300 rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div class="relative">
+                <i class="fa-solid fa-money-bill-wave absolute left-3 top-3 text-gray-400"></i>
+                <input placeholder="Price" type="number" [(ngModel)]="price"
+                    class="w-full border border-gray-300 rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div class="relative">
+                <i class="fa-solid fa-image absolute left-3 top-3 text-gray-400"></i>
+                <input placeholder="Image URL (optional)" [(ngModel)]="image"
+                    class="w-full border border-gray-300 rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <!-- BUTTONS -->
+            <div class="flex gap-4 justify-center mt-6 flex-wrap">
+                <button (click)="save()"
+                    class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-300">
+                    <i class="fa-solid fa-floppy-disk"></i> {{ editingProductId ? "Update" : "Save" }} </button>
+                <button *ngIf="editingProductId" (click)="resetForm()"
+                    class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-300">
+                    <i class="fa-solid fa-xmark"></i> Cancel </button>
+            </div>
+        </div>
+        <hr class="my-6 border-gray-300" />
+        <!-- PRODUCT LIST -->
+        <div class="mt-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center flex items-center justify-center gap-2">
+                <i class="fa-solid fa-list"></i> Available Products
+            </h3>
+            <div *ngIf="!products.length" class="text-center text-gray-500 py-8">
+                <i class="fa-solid fa-box-open mr-2"></i> No products available yet
+            </div>
+            <ul *ngIf="products.length" class="space-y-3">
+                <li *ngFor="let p of products"
+                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 hover:shadow-md transition-all">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                        <i class="fa-solid fa-box text-blue-600"></i>
+                        <span class="font-medium text-gray-800">{{ p.name }}</span>
+                        <span class="text-blue-600 font-semibold">₦{{ p.price }}</span>
+                    </div>
+                    <div class="flex gap-3 mt-3 sm:mt-0">
+                        <button (click)="edit(p)"
+                            class="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-300">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit </button>
+                        <button (click)="delete(p)"
+                            class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-300">
+                            <i class="fa-solid fa-trash"></i> Delete </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!-- BACK BUTTON -->
+        <div class="flex justify-center mt-8">
+            <button (click)="goHome()"
+                class="flex items-center justify-center gap-2 px-8 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-xl shadow-md transition-all duration-300">
+                <i class="fa-solid fa-house"></i> Back to Home </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<div *ngIf="loading" class="flex justify-center items-center h-screen text-lg font-semibold text-gray-500">
+    <i class="fa-solid fa-spinner fa-spin mr-2"></i> Loading product...
+</div>
+<div *ngIf="!loading && product"
+    class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div
+        class="bg-white rounded-3xl shadow-xl overflow-hidden max-w-2xl w-full transform transition duration-300 hover:scale-[1.01]">
+        <img [src]="product.image || 'assets/placeholder.png'" alt="{{ product.name }}"
+            class="w-full h-80 object-cover" />
+        <div class="p-8 flex flex-col gap-4 text-center">
+            <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">{{ product.name }}</h2>
+            <p class="text-2xl text-green-600 font-semibold">₦{{ product.price }}</p>
+            <div class="mt-6 flex flex-col sm:flex-row justify-center gap-4 w-full">
+                <button (click)="addToCart()"
+                    class="flex items-center justify-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition-all duration-300 w-full sm:w-auto">
+                    <i class="fa-solid fa-cart-plus"></i> Add to Cart </button>
+                <button (click)="goHome()"
+                    class="flex items-center justify-center gap-2 px-8 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-xl shadow-md transition-all duration-300 w-full sm:w-auto">
+                    <i class="fa-solid fa-house"></i> Back to Home </button>
+            </div>
+        </div>
+    </div>
+</div>
