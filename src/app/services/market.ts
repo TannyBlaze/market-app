@@ -5,7 +5,7 @@ import { tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class Market {
-  private api = 'http://localhost:3000/api';
+  private api = 'https://backend-for-market-app.vercel.app/api';
   private cartItems: any[] = [];
   private cart$ = new BehaviorSubject<any[]>([]);
   private user$ = new BehaviorSubject<any>(null);
