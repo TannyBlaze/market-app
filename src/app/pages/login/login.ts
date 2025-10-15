@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Market } from '../../services/market';
 import { Router, RouterModule } from '@angular/router';
-import { safeAlert } from '../../utils/browser';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +14,24 @@ import { FormsModule } from '@angular/forms';
 export class Login {
   email = '';
   password = '';
-  constructor(private auth: Market, private router: Router) {}
+
+  constructor(private auth: Market, private router: Router) { }
+
+  private toast(
+    message: string,
+    icon: 'success' | 'error' | 'warning' | 'info' = 'info'
+  ) {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon,
+      title: message,
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
+  }
+
   submit() {
     this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: (res: any) => {
@@ -22,13 +39,21 @@ export class Login {
           localStorage.setItem('token', res.token);
           localStorage.setItem('user', JSON.stringify(res.user));
 
-          safeAlert(`Welcome back, ${res.user.role === 'admin' ? 'Admin' : 'User'}`);
+          const name = res.user.name || 'User';
+          const role = res.user.role;
+
+          const message =
+            role === 'admin'
+              ? `Welcome back, Admin!`
+              : `Welcome back, ${name}!`;
+
+          this.toast(message, 'success');
           this.router.navigate(['/']);
         } else {
-          safeAlert('Invalid login response — check your backend.');
+          this.toast('Invalid login response — check your backend.', 'error');
         }
       },
-      error: (err) => safeAlert(err?.error?.message || 'Login failed'),
+      error: (err) => this.toast(err?.error?.message || 'Login failed', 'error'),
     });
   }
 }

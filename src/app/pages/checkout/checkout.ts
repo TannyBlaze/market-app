@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Market } from '../../services/market';
 import { Router } from '@angular/router';
-import { safeAlert } from '../../utils/browser';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-checkout',
@@ -14,19 +14,32 @@ import { safeAlert } from '../../utils/browser';
 export class Checkout implements OnInit {
   total = 0;
 
-  constructor(private market: Market, private router: Router) {}
+  constructor(private market: Market, private router: Router) { }
 
   ngOnInit() {
     this.total = this.market.getTotal();
   }
 
+  // ✅ Reusable SweetAlert toast
+  private toast(message: string, icon: 'success' | 'error' | 'warning' | 'info' = 'info') {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon,
+      title: message,
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
+  }
+
   placeOrder() {
     this.market.placeOrderFromCart().subscribe({
       next: () => {
-        safeAlert('Order placed successfully!');
+        this.toast('Order placed successfully!', 'success');
         this.router.navigate(['/orders']);
       },
-      error: () => safeAlert('Failed to place order'),
+      error: () => this.toast('Failed to place order', 'error'),
     });
   }
 
@@ -34,5 +47,3 @@ export class Checkout implements OnInit {
     this.router.navigate(['/']);
   }
 }
-
-

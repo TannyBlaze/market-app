@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Market } from '../../services/market';
-import { safeAlert } from '../../utils/browser';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +16,7 @@ export class Home implements OnInit {
   products: any[] = [];
   loading = true;
 
-  constructor(private market: Market, private router: Router) {}
+  constructor(private market: Market, private router: Router) { }
 
   ngOnInit() {
     this.market.getProducts().subscribe({
@@ -26,8 +26,20 @@ export class Home implements OnInit {
       },
       error: () => {
         this.loading = false;
-        safeAlert('Failed to load products.');
+        this.toast('Failed to load products.', 'error');
       },
+    });
+  }
+
+  private toast(message: string, icon: 'success' | 'error' | 'warning' | 'info' = 'info') {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon,
+      title: message,
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
     });
   }
 
@@ -41,7 +53,7 @@ export class Home implements OnInit {
 
   addToCart(product: any) {
     this.market.addToCart(product);
-    safeAlert(`${product.name} added to cart!`);
+    this.toast(`${product.name} added to cart!`, 'success');
   }
 
   openProduct(product: any) {

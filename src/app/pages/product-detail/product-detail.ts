@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Market } from '../../services/market';
-import { safeAlert } from '../../utils/browser';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-product-detail',
@@ -19,13 +19,26 @@ export class ProductDetail implements OnInit {
     private route: ActivatedRoute,
     private market: Market,
     private router: Router
-  ) {}
+  ) { }
+
+  // ✅ SweetAlert reusable toast
+  private toast(message: string, icon: 'success' | 'error' | 'warning' | 'info' = 'info') {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon,
+      title: message,
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
+  }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('_id');
     if (!id) {
       this.loading = false;
-      safeAlert('Invalid product ID');
+      this.toast('Invalid product ID', 'error');
       return;
     }
 
@@ -37,7 +50,7 @@ export class ProductDetail implements OnInit {
       error: (err) => {
         console.error('Error fetching product:', err);
         this.loading = false;
-        safeAlert('Product not found');
+        this.toast('Product not found', 'error');
       },
     });
   }
@@ -45,7 +58,7 @@ export class ProductDetail implements OnInit {
   addToCart() {
     if (!this.product) return;
     this.market.addToCart({ ...this.product, qty: 1 });
-    safeAlert(`${this.product.name} added to cart!`);
+    this.toast(`${this.product.name} added to cart!`, 'success');
   }
 
   goHome() {

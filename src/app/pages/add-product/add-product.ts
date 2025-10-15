@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Market } from '../../services/market';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { safeAlert } from '../../utils/browser';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-add-product',
@@ -19,18 +19,30 @@ export class AddProduct {
   products: any[] = [];
   editingProductId: string | null = null;
 
-  constructor(private market: Market, private router: Router) {}
+  constructor(private market: Market, private router: Router) { }
 
   ngOnInit() {
     this.checkAdminAccess();
     this.loadProducts();
   }
 
+  private toast(message: string, icon: 'success' | 'error' | 'warning' | 'info' = 'info') {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon,
+      title: message,
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
+  }
+
   checkAdminAccess() {
     const user = JSON.parse(localStorage.getItem('user') || 'null');
 
     if (!user || user.role !== 'admin') {
-      safeAlert('Access denied: Admins only');
+      this.toast('Access denied: Admins only', 'error');
       this.router.navigate(['/']);
     }
   }
@@ -38,13 +50,13 @@ export class AddProduct {
   loadProducts() {
     this.market.getProducts().subscribe({
       next: (data) => (this.products = data),
-      error: () => safeAlert('Failed to load products'),
+      error: () => this.toast('Failed to load products', 'error'),
     });
   }
 
   save() {
     if (!this.name || this.price === null) {
-      safeAlert('Please fill in all fields');
+      this.toast('Please fill in all fields', 'warning');
       return;
     }
 
@@ -53,20 +65,20 @@ export class AddProduct {
     if (this.editingProductId) {
       this.market.updateProduct(this.editingProductId, product).subscribe({
         next: () => {
-          safeAlert('Product updated successfully!');
+          this.toast('Product updated successfully!', 'success');
           this.resetForm();
           this.loadProducts();
         },
-        error: () => safeAlert('Failed to update product'),
+        error: () => this.toast('Failed to update product', 'error'),
       });
     } else {
       this.market.addProduct(product).subscribe({
         next: () => {
-          safeAlert('Product added successfully!');
+          this.toast('Product added successfully!', 'success');
           this.resetForm();
           this.loadProducts();
         },
-        error: () => safeAlert('Failed to add product'),
+        error: () => this.toast('Failed to add product', 'error'),
       });
     }
   }
@@ -79,13 +91,23 @@ export class AddProduct {
   }
 
   delete(p: any) {
-    if (!confirm(`Delete "${p.name}"?`)) return;
-    this.market.deleteProduct(p._id).subscribe({
-      next: () => {
-        safeAlert('Product deleted!');
-        this.loadProducts();
-      },
-      error: () => safeAlert('Failed to delete product'),
+    Swal.fire({
+      title: `Delete "${p.name}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e3342f',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.market.deleteProduct(p._id).subscribe({
+          next: () => {
+            this.toast('Product deleted!', 'success');
+            this.loadProducts();
+          },
+          error: () => this.toast('Failed to delete product', 'error'),
+        });
+      }
     });
   }
 

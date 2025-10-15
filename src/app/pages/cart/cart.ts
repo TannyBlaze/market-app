@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Market } from '../../services/market';
-import { safeAlert } from '../../utils/browser';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cart',
@@ -14,10 +14,22 @@ import { safeAlert } from '../../utils/browser';
 export class Cart implements OnInit {
   items: any[] = [];
 
-  constructor(private market: Market, private router: Router) {}
+  constructor(private market: Market, private router: Router) { }
 
   ngOnInit() {
     this.refreshCart();
+  }
+
+  private toast(message: string, icon: 'success' | 'error' | 'warning' | 'info' = 'info') {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon,
+      title: message,
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
   }
 
   refreshCart() {
@@ -31,6 +43,7 @@ export class Cart implements OnInit {
   remove(idOrName: any) {
     this.market.removeFromCart(idOrName);
     this.refreshCart();
+    this.toast('Item removed from cart', 'info');
   }
 
   increment(item: any) {
@@ -58,7 +71,10 @@ export class Cart implements OnInit {
   }
 
   checkout() {
-    if (!this.items.length) return safeAlert('Cart is empty!');
+    if (!this.items.length) {
+      this.toast('Cart is empty!', 'warning');
+      return;
+    }
     this.router.navigate(['/checkout']);
   }
 
@@ -66,8 +82,3 @@ export class Cart implements OnInit {
     this.router.navigate(['/']);
   }
 }
-// "server": "src/main.server.ts",
-//   "outputMode": "server",
-//     "ssr": {
-//   "entry": "src/server.ts"
-// }
