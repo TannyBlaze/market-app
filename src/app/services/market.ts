@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class Market {
   private api = 'http://localhost:3000/api';
-
   private cartItems: any[] = [];
   private cart$ = new BehaviorSubject<any[]>([]);
-
   private user$ = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) {
@@ -19,6 +17,11 @@ export class Market {
         this.user$.next(JSON.parse(savedUser));
       }
     }
+  }
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.getToken();
+    return new HttpHeaders(token ? { Authorization: `Bearer ${token}` } : {});
   }
 
   signup(user: { name: string; email: string; password: string }): Observable<any> {
@@ -67,23 +70,31 @@ export class Market {
   }
 
   getProducts(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.api}/products`);
+    return this.http.get<any[]>(`${this.api}/products`, { headers: this.getAuthHeaders() });
   }
 
   getProduct(id: string): Observable<any> {
-    return this.http.get<any>(`${this.api}/products/${id}`);
+    return this.http.get<any>(`${this.api}/products/${id}`, { headers: this.getAuthHeaders() });
   }
 
   addProduct(product: { name: string; price: number; image?: string }): Observable<any> {
-    return this.http.post<any>(`${this.api}/products`, product);
+    return this.http.post<any>(`${this.api}/products`, product, { headers: this.getAuthHeaders() });
+  }
+
+  updateProduct(id: string, data: any): Observable<any> {
+    return this.http.put<any>(`${this.api}/products/${id}`, data, { headers: this.getAuthHeaders() });
+  }
+
+  deleteProduct(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.api}/products/${id}`, { headers: this.getAuthHeaders() });
   }
 
   getOrders(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.api}/orders`);
+    return this.http.get<any[]>(`${this.api}/orders`, { headers: this.getAuthHeaders() });
   }
 
   createOrder(order: { date: string; total: number; items: any[] }): Observable<any> {
-    return this.http.post<any>(`${this.api}/orders`, order);
+    return this.http.post<any>(`${this.api}/orders`, order, { headers: this.getAuthHeaders() });
   }
 
   placeOrderFromCart(): Observable<any> {
@@ -104,11 +115,17 @@ export class Market {
   }
 
   addToCart(item: any) {
-    const existing = this.cartItems.find((i) => i.id === item.id);
+    const id = item.id || item._id;
+    const existing = this.cartItems.find((i) => i.id === id || i._id === id);
+
     if (existing) {
       existing.qty = (existing.qty || 0) + (item.qty || 1);
     } else {
-      this.cartItems.push({ ...item, qty: item.qty || 1 });
+      this.cartItems.push({
+        ...item,
+        id: id,
+        qty: item.qty || 1,
+      });
     }
     this.cart$.next(this.cartItems);
   }
@@ -125,14 +142,6 @@ export class Market {
 
   getTotal(): number {
     return this.cartItems.reduce((sum, i) => sum + (i.price || 0) * (i.qty || 0), 0);
-  }
-
-  updateProduct(id: string, data: any) {
-    return this.http.put<any>(`${this.api}/products/${id}`, data);
-  }
-
-  deleteProduct(id: string) {
-    return this.http.delete<any>(`${this.api}/products/${id}`);
   }
 
   getToken(): string | null {

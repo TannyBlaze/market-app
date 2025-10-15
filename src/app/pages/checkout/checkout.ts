@@ -31,7 +31,7 @@ export class Checkout implements OnInit {
   }
 
   goHome() {
-    this.router.navigate(['/']); // navigates to home page
+    this.router.navigate(['/']);
   }
 }
 
