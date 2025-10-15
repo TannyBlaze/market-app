@@ -66,3 +66,8 @@ export class Cart implements OnInit {
     this.router.navigate(['/']);
   }
 }
+// "server": "src/main.server.ts",
+//   "outputMode": "server",
+//     "ssr": {
+//   "entry": "src/server.ts"
+// }
