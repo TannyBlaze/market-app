@@ -13,7 +13,7 @@
             <a routerLink="/orders" routerLinkActive="text-blue-400 font-semibold"
                 class="flex items-center gap-2 hover:text-blue-400 transition duration-200">
                 <i class="fa-solid fa-box"></i> Orders </a>
-            <ng-container *ngIf="(user$ | async) as user">
+            <ng-container *ngIf="(user$ | async) as user; else guest">
                 <a *ngIf="user.role === 'admin'" routerLink="/add-product"
                     routerLinkActive="text-blue-400 font-semibold"
                     class="flex items-center gap-2 hover:text-blue-400 transition duration-200">
