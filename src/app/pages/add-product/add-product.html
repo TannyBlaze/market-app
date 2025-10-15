@@ -15,11 +15,32 @@
                 <input placeholder="Price" type="number" [(ngModel)]="price"
                     class="w-full border border-gray-300 rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
-            <div class="relative">
-                <i class="fa-solid fa-image absolute left-3 top-3 text-gray-400"></i>
-                <input placeholder="Image URL (optional)" [(ngModel)]="image"
-                    class="w-full border border-gray-300 rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <!-- FLEXIBLE IMAGE INPUT -->
+            <div class="relative border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-400 transition cursor-pointer"
+                (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+                <i class="fa-solid fa-image text-4xl text-gray-400 mb-3"></i>
+                <div *ngIf="!imagePreview" class="space-y-2">
+                    <p class="text-gray-600">Drag & drop an image here or</p>
+                    <label
+                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer hover:bg-blue-700 transition">
+                        <i class="fa-solid fa-upload mr-2"></i> Choose from device <input type="file" accept="image/*"
+                            class="hidden" (change)="onFileSelected($event)" />
+                    </label>
+                    <div class="mt-3">
+                        <input [(ngModel)]="image" placeholder="or paste image URL..."
+                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    </div>
+                </div>
+                <div *ngIf="imagePreview" class="relative inline-block">
+                    <img [src]="imagePreview" alt="Preview" class="rounded-xl max-h-48 mx-auto shadow-md object-cover" />
+                    <button type="button"
+                        class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition"
+                        (click)="removeImage()">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
             </div>
+
             <!-- BUTTONS -->
             <div class="flex gap-4 justify-center mt-6 flex-wrap">
                 <button (click)="save()"

@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
 export class Login {
   email = '';
   password = '';
+  showPassword = false;
 
   constructor(private auth: Market, private router: Router) { }
 
@@ -30,6 +31,10 @@ export class Login {
       timer: 2500,
       timerProgressBar: true,
     });
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 
   submit() {

@@ -50,6 +50,7 @@ export class Market {
 
   logout() {
     this.user$.next(null);
+    this.clearCart();
     if (typeof window !== 'undefined') {
       localStorage.removeItem('user');
       localStorage.removeItem('token');

@@ -15,6 +15,7 @@ export class Register {
   name = '';
   email = '';
   password = '';
+  showPassword = false;
 
   constructor(private auth: Market, private router: Router) { }
 
@@ -30,6 +31,10 @@ export class Register {
     });
   }
 
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+  
   submit() {
     this.auth.signup({ name: this.name, email: this.email, password: this.password }).subscribe({
       next: () => {

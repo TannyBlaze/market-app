@@ -15,7 +15,8 @@ import Swal from 'sweetalert2';
 export class AddProduct {
   name = '';
   price: number | null = null;
-  image = '';
+  image: string | null = null;
+  imagePreview: string | null = null;
   products: any[] = [];
   editingProductId: string | null = null;
 
@@ -40,7 +41,6 @@ export class AddProduct {
 
   checkAdminAccess() {
     const user = JSON.parse(localStorage.getItem('user') || 'null');
-
     if (!user || user.role !== 'admin') {
       this.toast('Access denied: Admins only', 'error');
       this.router.navigate(['/']);
@@ -60,7 +60,7 @@ export class AddProduct {
       return;
     }
 
-    const product = { name: this.name, price: this.price, image: this.image };
+    const product = { name: this.name, price: this.price, image: this.image || undefined };
 
     if (this.editingProductId) {
       this.market.updateProduct(this.editingProductId, product).subscribe({
@@ -87,6 +87,7 @@ export class AddProduct {
     this.name = p.name;
     this.price = p.price;
     this.image = p.image;
+    this.imagePreview = p.image || null;
     this.editingProductId = p._id;
   }
 
@@ -115,10 +116,49 @@ export class AddProduct {
     this.name = '';
     this.price = null;
     this.image = '';
+    this.imagePreview = null;
     this.editingProductId = null;
   }
 
   goHome() {
     this.router.navigate(['/']);
+  }
+
+  // 💪 --- NEW IMAGE LOGIC BELOW --- 💪
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreview = e.target.result;
+        this.image = this.imagePreview; // stores as base64
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    const file = event.dataTransfer?.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreview = e.target.result;
+        this.image = this.imagePreview;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeImage() {
+    this.imagePreview = null;
+    this.image = '';
   }
 }
