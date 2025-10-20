@@ -91,8 +91,14 @@ export class Market {
   }
 
   getOrders(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.api}/orders`, { headers: this.getAuthHeaders() });
+    const user = this.getCurrentUser();
+    const headers = this.getAuthHeaders();
+    if (user && user.role === 'admin') {
+      return this.http.get<any[]>(`${this.api}/orders`, { headers });
+    }
+    return this.http.get<any[]>(`${this.api}/orders/mine`, { headers });
   }
+
 
   createOrder(order: { date: string; total: number; items: any[] }): Observable<any> {
     return this.http.post<any>(`${this.api}/orders`, order, { headers: this.getAuthHeaders() });
