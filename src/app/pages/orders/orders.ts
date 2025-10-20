@@ -22,7 +22,7 @@ export class Orders implements OnInit {
   ngOnInit() {
     this.market.getOrders().subscribe({
       next: (res) => (this.orders = res),
-      error: () => safeAlert('Failed to load order'),
+      error: () => safeAlert('Failed to load orders'),
     });
   }
 
