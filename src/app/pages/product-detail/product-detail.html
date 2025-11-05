@@ -5,15 +5,13 @@
     class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
     <div
         class="bg-white rounded-3xl shadow-2xl overflow-hidden max-w-6xl w-full flex flex-col md:flex-row transform transition duration-300 hover:scale-[1.01]">
-        <!-- Image Section -->
         <div class="md:w-[65%]">
             <img [src]="product.image || 'assets/placeholder.png'" alt="{{ product.name }}"
                 class="w-full h-[550px] object-cover" />
         </div>
-        <!-- Content Section -->
         <div class="md:w-[35%] p-10 flex flex-col justify-center gap-6 text-center md:text-left bg-gray-50">
             <h2 class="text-4xl font-extrabold text-gray-800 leading-tight"> {{ product.name }} </h2>
-            <p class="text-3xl text-green-600 font-semibold"> ₦{{ product.price }} </p>
+            <p class="text-3xl text-green-600 font-semibold"> {{ product.price | currency:'NGN':'symbol':'1.2-2' }} </p>
             <div class="mt-4 flex flex-col sm:flex-row justify-center md:justify-start gap-4 w-full">
                 <button (click)="addToCart()"
                     class="flex items-center justify-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition-all duration-300 w-full sm:w-auto">

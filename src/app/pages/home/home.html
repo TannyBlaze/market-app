@@ -18,7 +18,7 @@
                 <div class="p-4 flex flex-col justify-between flex-grow">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800 mb-2 truncate">{{ p.name }}</h3>
-                        <p class="text-blue-600 font-bold text-xl mb-3">₦{{ p.price }}</p>
+                        <p class="text-blue-600 font-bold text-xl mb-3">{{ p.price | currency:'NGN':'symbol':'1.2-2' }}</p>
                     </div>
                     <div class="flex items-center justify-center mb-3 space-x-2">
                         <button (click)="decreaseQty(p)"

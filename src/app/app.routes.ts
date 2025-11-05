@@ -9,6 +9,7 @@ import { AuthGuard } from './guards/auth-guard';
 import { Login } from './pages/login/login';
 import { Register } from './pages/sign-up/sign-up';
 import { AdminGuard } from './guards/admin-guard';
+import { NotFound } from './pages/not-found/not-found';
 
 export const routes: Routes = [
     { path: '', component: Home },
@@ -19,5 +20,5 @@ export const routes: Routes = [
     { path: 'checkout', component: Checkout, canActivate: [AuthGuard] },
     { path: 'login', component: Login },
     { path: 'signup', component: Register },
-    { path: '**', redirectTo: '' },
+    { path: '**', component: NotFound },
 ];

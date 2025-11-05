@@ -3,7 +3,6 @@
         <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center flex items-center justify-center gap-2">
             <i class="fa-solid fa-box"></i> {{ editingProductId ? "Edit Product" : "Add New Product" }}
         </h2>
-        <!-- FORM SECTION -->
         <div class="grid gap-4 mb-6">
             <div class="relative">
                 <i class="fa-solid fa-tag absolute left-3 top-3 text-gray-400"></i>
@@ -15,7 +14,6 @@
                 <input placeholder="Price" type="number" [(ngModel)]="price"
                     class="w-full border border-gray-300 rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
-            <!-- FLEXIBLE IMAGE INPUT -->
             <div class="relative border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-400 transition cursor-pointer"
                 (dragover)="onDragOver($event)" (drop)="onDrop($event)">
                 <i class="fa-solid fa-image text-4xl text-gray-400 mb-3"></i>
@@ -41,7 +39,6 @@
                 </div>
             </div>
 
-            <!-- BUTTONS -->
             <div class="flex gap-4 justify-center mt-6 flex-wrap">
                 <button (click)="save()"
                     class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-300">
@@ -52,7 +49,7 @@
             </div>
         </div>
         <hr class="my-6 border-gray-300" />
-        <!-- PRODUCT LIST -->
+
         <div class="mt-6">
             <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center flex items-center justify-center gap-2">
                 <i class="fa-solid fa-list"></i> Available Products
@@ -66,7 +63,7 @@
                     <div class="flex flex-col sm:flex-row sm:items-center gap-3">
                         <i class="fa-solid fa-box text-blue-600"></i>
                         <span class="font-medium text-gray-800">{{ p.name }}</span>
-                        <span class="text-blue-600 font-semibold">₦{{ p.price }}</span>
+                        <span class="text-blue-600 font-semibold">{{ p.price | currency:'NGN':'symbol':'1.2-2' }}</span>
                     </div>
                     <div class="flex gap-3 mt-3 sm:mt-0">
                         <button (click)="edit(p)"
@@ -79,7 +76,7 @@
                 </li>
             </ul>
         </div>
-        <!-- BACK BUTTON -->
+        
         <div class="flex justify-center mt-8">
             <button (click)="goHome()"
                 class="flex items-center justify-center gap-2 px-8 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-xl shadow-md transition-all duration-300">
